@@ -8,12 +8,11 @@ require("dotenv").config()
 app.use(cors());
 app.use(express.json())
 
+const authRouter = require("./routes/auth.routes")
+app.use("/auth", authRouter)
 
 const usersRouter = require("./routes/users.routes");
 app.use("/users", authMiddleware, usersRouter)
-
-const authRouter = require("./routes/auth.routes")
-app.use("/auth", authRouter)
 
 app.use('/images', express.static('images/post_images'));
 
