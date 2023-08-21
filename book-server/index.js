@@ -1,13 +1,13 @@
 const express = require("express");
 const app = express();
 const mongooseConnect = require("./configs/mongoDB.connect");
+const authMiddleware = require("./middlewares/auth.middleware");
 const cors = require("cors");
 require("dotenv").config()
 
 app.use(cors());
 app.use(express.json())
 
-const authMiddleware = require("./middlewares/auth.middleware");
 
 const usersRouter = require("./routes/users.routes");
 app.use("/users", authMiddleware, usersRouter)
