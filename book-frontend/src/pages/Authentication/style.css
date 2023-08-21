@@ -1,0 +1,133 @@
+.create-page-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* border: 2pt solid var(--black); */
+  min-height: 100vh;
+  background-color: var(--white);
+  font-size: 15px;
+  line-height: 1.4286;
+}
+
+.create-form-container {
+  background: #fff;
+  padding: 1.5em;
+  margin: 3em;
+  width: 27em;
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+  box-shadow: 0 20px 35px rgba(0, 0, 0, 0.3);
+}
+
+.create-form {
+  display: flex;
+  flex-flow: column;
+  margin: 1em 0 2em 0;
+  width: 18em;
+}
+
+.user-info {
+  margin-bottom: 1em;
+  display: flex;
+  flex-flow: column;
+}
+
+.user-type {
+  margin: 1em 0 1em 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.user-type h4 {
+  font-weight: 600;
+}
+
+.types {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 60%;
+  gap: 0.5em;
+}
+
+.label-radio {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.form-header {
+  display: flex;
+  align-items: center;
+  height: 5em;
+}
+
+.label-input {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0.5em 0;
+}
+
+.label-input input {
+  width: 60%;
+  padding: 0.7em 1.2em;
+}
+
+.label-input .select-ingredients {
+  width: 65%;
+}
+
+.error-message {
+  color: red;
+  font-weight: 600;
+  font-size: 1em;
+}
+
+.label-input input:focus {
+  background-color: #efefef;
+}
+
+.label-input label {
+  font-size: 1em;
+  font-weight: 600;
+}
+
+.black-button {
+  border: none;
+  font-size: 1.2em;
+  font-weight: 700;
+  padding: 0.7em 1em;
+  border-radius: 0.5em;
+  color: white;
+  background-color: rgb(0, 0, 0);
+  cursor: pointer;
+}
+
+.black-button:hover {
+  background-color: rgb(64, 64, 64);
+}
+
+.bottom-form {
+  width: 17em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.create-toggle {
+  text-decoration: none;
+  color: rgb(0, 0, 0);
+  font-weight: 700;
+  font-size: 1.2em;
+  margin: 0.2em 0;
+  cursor: pointer;
+}
+
+.create-toggle:hover {
+  font-weight: 800;
+  color: rgb(64, 64, 64);
+}

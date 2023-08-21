@@ -1,0 +1,80 @@
+/* #side-menu {
+  display: flex;
+  flex-flow: column;
+  justify-content: space-evenly;
+  width: 250px;
+  height: 100%;
+  background-color: #fffefe;
+  border: 1pt rgb(214, 214, 214) solid;
+  z-index: 2;
+} */
+#side-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  margin: 0;
+  display: flex;
+  flex-flow: column;
+  justify-content: space-evenly;
+  width: 250px;
+  width: 20%;
+  height: 100%;
+  background-color: #fffefe;
+  border: 1pt rgb(214, 214, 214) solid;
+  z-index: 2;
+}
+
+#side-menu a {
+  text-decoration: none;
+}
+
+.menu-section {
+  margin: 0 0 1em 0;
+  padding: 0.2em 0;
+  margin-left: 0;
+}
+
+.menu-pages {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.3em;
+  padding: 0.5em 0 0.5em 1.5em;
+  cursor: pointer;
+}
+
+.insta-title {
+  color: rgb(0, 0, 0);
+  fill: rgb(0, 0, 0);
+  font-size: 1.7em;
+  font-weight: 700;
+  margin-left: 1em;
+  display: flex;
+  align-items: center;
+  gap: 1em;
+}
+
+.menu-pages:hover {
+  background-color: rgb(233, 233, 233);
+}
+
+.menu-titles {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  color: black;
+}
+
+.menu-pages h4 {
+  letter-spacing: 0.01785714em;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.25rem;
+  color: #3c4043;
+  margin-left: 2em;
+}
+
+.menu-icons {
+  font-size: 1.35em;
+}
