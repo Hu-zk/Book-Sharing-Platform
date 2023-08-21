@@ -36,26 +36,26 @@ const createBook = async (req, res) => {
     review,
     posted_by
   })
-   try {
+  try {
     const savedBook = await post.save();
-     return res.status(201).json(savedBook);
+      return res.status(201).json(savedBook);
   } catch (error) {
     return res.status(500).json({ message: 'An error occurred while posting the book.' });
   }
 
   }else{
-     return res.status(400).json({ message: 'File missing in request!.' });
+    return res.status(400).json({ message: 'File missing in request!.' });
   }
   
 }
 
 const addComment = async (req, res) => {
   const { bookId } = req.params;
-   const { content } = req.body;
+  const { content } = req.body;
   const currentUser = req.user;
 
   try {
-   const updatedBook = await Book.findByIdAndUpdate(
+    const updatedBook = await Book.findByIdAndUpdate(
       bookId,
       { $push: { comments: { author: `${currentUser.first_name} ${currentUser.last_name}`, content } } },
       { new: true }
@@ -74,7 +74,7 @@ const addComment = async (req, res) => {
 const likeBook = async (req, res) => {
   const { bookId } = req.params;
   const currentUser = req.user; 
- 
+
   try {
     const book = await Book.findById(bookId);
     console.log(book)
@@ -174,19 +174,6 @@ const searchBooks = async (req, res) => {
     return res.status(500).json({ message: 'An error occurred while searching for books.' });
   }
 };
-
-
-// const getLikedBooks = async (req, res) => {
-//   const currentUser = req.user;
-
-//   try {
-//     const likedBooks = await Book.find({ liked_by: currentUser._id });
-//     res.status(200).json(likedBooks);
-//   } catch (error) {
-//     return res.status(500).json({ message: 'An error occurred while fetching liked books.' });
-//   }
-// };
-
 
 module.exports = {
   createBook,
