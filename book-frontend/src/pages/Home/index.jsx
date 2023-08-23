@@ -8,16 +8,16 @@ import './style.css';
 
 function Home() {
 
-    const [recipes, setRecipes]= useState([])
+    const [books, setBooks]= useState([])
 
     const fetchData = async () =>{
         try {
             const response = await sendRequest({
-                route: "/user/recipes/display",
+                route: "/books/",
                 method: requestMethods.GET,
             });
-            console.log(response.recipes)
-            setRecipes(response.recipes);
+            console.log(response)
+            setBooks(response);
         } catch (error) {
             console.error('failed:', error);
         }
@@ -28,8 +28,8 @@ function Home() {
 
     return (
         <div className='home-page-container'>
-            <SearchBar setRecipes={setRecipes}/>
-            <Cards recipes={recipes} setRecipes={setRecipes} fetchData={fetchData}/>
+            <SearchBar setBooks={setBooks}/>
+            <Cards books={books} setBooks={setBooks} fetchData={fetchData}/>
         </div>
     )
 }

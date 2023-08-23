@@ -5,8 +5,6 @@ const authMiddleware = require("../middlewares/auth.middleware")
 const picture_uploader =require("../middlewares/picture_uploader")
 
 router.get("/",authMiddleware, bookControllers.getAllPosts)
-router.post("/:bookId/addcomment",authMiddleware, bookControllers.addComment)
-
 router.post("/",authMiddleware,picture_uploader.upload.single("image"), bookControllers.createBook)
 
 router.get("/feed", authMiddleware, bookControllers.getFeed);
@@ -16,6 +14,5 @@ router.get('/:bookId/isliked', authMiddleware, bookControllers.checkIfBookIsLike
 router.get("/recommended", authMiddleware, bookControllers.getRecommendedBooks);
 router.get("/search", bookControllers.searchBooks);
 router.get("/:id",authMiddleware, bookControllers.getPost)
-router.post("/addComment/:bookId",authMiddleware, bookControllers.addComment)
 
 module.exports = router

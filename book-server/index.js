@@ -14,7 +14,8 @@ app.use("/auth", authRouter)
 const usersRouter = require("./routes/users.routes");
 app.use("/users", authMiddleware, usersRouter)
 
-app.use('/images', express.static('images/post_images'));
+app.use('/images', express.static('images'));
+
 
 const booksRouter = require("./routes/book.route")
 app.use("/books", booksRouter)

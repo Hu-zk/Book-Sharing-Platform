@@ -1,16 +1,49 @@
 const Book = require("../models/book.model")
 const fs = require('fs');
 const path = require('path'); 
+const User = require("../models/user.model");
+
+// const getAllPosts = async (req, res) => {
+//   try {
+//     const books = await Book.find();
+//     res.status(200).json(books);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: 'An error occurred while fetching posts.' });
+//   }
+// }
 
 const getAllPosts = async (req, res) => {
   try {
+    const currentUserId = req.user._id;
+
     const books = await Book.find();
-    res.status(200).json(books);
+
+    const likedByUserIds = books.flatMap(book => book.liked_by);
+
+    const postedByUserIds = books.map(book => book.posted_by);
+    const postedByUsers = await User.find({ _id: { $in: postedByUserIds } }, 'name following');
+
+    const currentUserFollowingMap = {};
+    postedByUsers.forEach(user => {
+      currentUserFollowingMap[user._id] = user.following.includes(currentUserId);
+    });
+
+    const booksWithUserInfo = books.map(book => ({
+      ...book.toObject(),
+      postedByUser: postedByUsers.find(user => user._id.equals(book.posted_by)),
+      currentUserFollowing: currentUserFollowingMap[book.posted_by],
+      currentUserLiked: likedByUserIds.includes(currentUserId),
+    }));
+
+    res.status(200).json(booksWithUserInfo);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'An error occurred while fetching posts.' });
   }
-}
+};
+
+
 
 const getPost = async (req, res) => {
   const postId = req.params.id;
@@ -30,24 +63,16 @@ const createBook = async (req, res) => {
 
   const { title, author, genre, review, image } = req.body;
   const userId = req.user._id; 
-  
-  // console.log(req.body)
-  let imagePath = null;
+    let imagePath = null;
 
   if (image) {
-    // Decode base64 image and save to a specific folder
     const uploadDir = path.join(__dirname, '../images');
-    const extension = 'png'; // Set the appropriate extension based on your use case
+    const extension = 'png';
     const imageName = `${Date.now()}.${extension}`;
     const imageBuffer = Buffer.from(image, 'base64');
     const imageFilePath = path.join(uploadDir, imageName);
     fs.writeFileSync(imageFilePath, imageBuffer);
-    imagePath = `../images/${imageName}`;
-  }else{
-    console.log("didn't enter")
-  }
-
-
+    imagePath = `images/${imageName}`;
     const post = new Book({
       title,
       author,
@@ -57,58 +82,14 @@ const createBook = async (req, res) => {
     })
     try {
       const savedBook = await post.save();
-        return res.status(201).json(savedBook);
+      return res.status(201).json(savedBook);
     } catch (error) {
       return res.status(500).json({ message: 'An error occurred while posting the book.' });
     }
-
-}
-
-// const createBook = async (req, res) => {
-//   const { title, author, review } = req.body;
-//   const posted_by = req.user.id;
-  
-//   if(req.file){
-//     image ="http://localhost:8000/images/" + req.file.filename;
-//     const post = new Book({
-//       title,
-//       author,
-//       image,
-//       review,
-//       posted_by
-//     })
-//     try {
-//       const savedBook = await post.save();
-//         return res.status(201).json(savedBook);
-//     } catch (error) {
-//       return res.status(500).json({ message: 'An error occurred while posting the book.' });
-//     }
-//   }else{
-//     return res.status(400).json({ message: 'File missing in request!.' });
-//   }
-// }
-
-const addComment = async (req, res) => {
-  const { bookId } = req.params;
-  const { content } = req.body;
-  const currentUser = req.user;
-
-  try {
-    const updatedBook = await Book.findByIdAndUpdate(
-      bookId,
-      { $push: { comments: { author: `${currentUser.first_name} ${currentUser.last_name}`, content } } },
-      { new: true }
-    ).populate("comments.author");
-
-    if (!updatedBook) {
-      return res.status(404).json({ message: 'Book not found.' });
-    }
-
-    return res.status(201).json(updatedBook);
-  } catch (error) {
-    return res.status(500).json({ message: 'An error occurred while adding the comment.' });
+  }else{
+    return res.status(400).json({ message: 'File missing in request!.' });
   }
-};
+}
 
 const likeBook = async (req, res) => {
   const { bookId } = req.params;
@@ -218,7 +199,6 @@ module.exports = {
   createBook,
   getAllPosts,
   getPost,
-  addComment,
   likeBook,
   unlikeBook,
   checkIfBookIsLiked,
