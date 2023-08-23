@@ -21,15 +21,15 @@ const toggleFollow = async (req, res) => {
             return res.status(404).json({ message: 'User not found.' });
         }
     
-        if (userToFollow.followers.includes(currentUserId)) {
-            userToFollow.followers.pull(currentUserId);
+        if (userToFollow.following.includes(currentUserId)) {
+            userToFollow.following.pull(currentUserId);
+            await userToFollow.save();
+            res.status(200).json({ message: 'UnFollow successfully.' });
         } else {
-            userToFollow.followers.push(currentUserId);
+            userToFollow.following.push(currentUserId);
+            await userToFollow.save();
+            res.status(200).json({ message: 'Follow successfully.' });
         }
-
-        await userToFollow.save();
-
-        res.status(200).json({ message: 'Follow status toggled successfully.' });
     } catch (error) {
     res.status(500).json({ message: 'An error occurred while toggling follow status.' });
     }

@@ -34,22 +34,23 @@ function Cards({books,setBooks,fetchData}) {
         }
     };
 
-    const toggleFollow = async (userId) => {
+    const toggleFollow = async (userId,bookId) => {
         try {
             const response = await sendRequest({
                 route: `users/${userId}/toggle-follow`,
                 method: requestMethods.POST,
             });
+            console.log(response)
     
-            setUsers((prevUsers) => {
-                return prevUsers.map((user) => {
-                    if (user._id === userId) {
+            setBooks((prevBooks) => {
+                return prevBooks.map((book) => {
+                    if (book._id === bookId) {
                         return {
-                            ...user,
-                            currentUserFollowing: !user.currentUserFollowing,
+                            ...book,
+                            currentUserFollowing: !book.currentUserFollowing,
                         };
                     }
-                    return user;
+                    return book;
                 });
             });
         } catch (error) {
@@ -68,7 +69,7 @@ function Cards({books,setBooks,fetchData}) {
                             <AiOutlinePlusCircle
                                 size={28}
                                 color={books.currentUserFollowing ? "blue" : "black"}
-                                onClick={() => toggleFollow(books.id)}
+                                onClick={() => toggleFollow(books.postedByUser._id,books._id)}
                             />
                         </div>
                         <img className='recipe-img' src={`http://127.0.0.1:8000/${books.image}`} alt="recipe img" />
