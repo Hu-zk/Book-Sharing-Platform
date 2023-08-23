@@ -34,30 +34,29 @@ function Cards({books,setBooks,fetchData}) {
         }
     };
 
-    const toggleShoppingList = async (recipeId) => {
+    const toggleFollow = async (userId) => {
         try {
             const response = await sendRequest({
-                route: `/user/shopping-lists/toggle/${recipeId}`,
+                route: `users/${userId}/toggle-follow`,
                 method: requestMethods.POST,
             });
-            console.log(response)
     
-            setBooks((prevbooks) => {
-                return prevbooks.map((recipe) => {
-                    if (recipe.id === recipeId) {
+            setUsers((prevUsers) => {
+                return prevUsers.map((user) => {
+                    if (user._id === userId) {
                         return {
-                            ...recipe,
-                            shopping_lists: !recipe.shopping_lists,
+                            ...user,
+                            currentUserFollowing: !user.currentUserFollowing,
                         };
                     }
-                    fetchData()
-                    return recipe;
+                    return user;
                 });
             });
         } catch (error) {
-            console.error('Failed to toggle shopping list:', error);
+            console.error('Failed to toggle follow:', error);
         }
     };
+    
     
 
     return (
@@ -69,7 +68,7 @@ function Cards({books,setBooks,fetchData}) {
                             <AiOutlinePlusCircle
                                 size={28}
                                 color={books.currentUserFollowing ? "blue" : "black"}
-                                onClick={() => toggleShoppingList(books.id)}
+                                onClick={() => toggleFollow(books.id)}
                             />
                         </div>
                         <img className='recipe-img' src={`http://127.0.0.1:8000/${books.image}`} alt="recipe img" />

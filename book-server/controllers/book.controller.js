@@ -106,31 +106,6 @@ const toggleLikeBook = async (req, res) => {
   }
 };
 
-const toggleFollow = async (req, res) => {
-  const { userId } = req.params;
-  const currentUserId = req.user.userId;
-
-  try {
-    const userToFollow = await User.findById(userId);
-
-    if (!userToFollow) {
-      return res.status(404).json({ message: 'User not found.' });
-    }
-
-    if (userToFollow.followers.includes(currentUserId)) {
-      userToFollow.followers.pull(currentUserId);
-    } else {
-      userToFollow.followers.push(currentUserId);
-    }
-
-    await userToFollow.save();
-
-    res.status(200).json({ message: 'Follow status toggled successfully.' });
-  } catch (error) {
-    res.status(500).json({ message: 'An error occurred while toggling follow status.' });
-  }
-};
-
 const likeBook = async (req, res) => {
   const { bookId } = req.params;
   const currentUser = req.user; 
@@ -240,7 +215,6 @@ module.exports = {
   getAllPosts,
   getPost,
   toggleLikeBook,
-  toggleFollow,
   likeBook,
   unlikeBook,
   checkIfBookIsLiked,
