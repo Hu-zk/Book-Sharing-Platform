@@ -127,38 +127,40 @@ const searchBooks = async (req, res) => {
 };
 
 const getFeed = async (req, res) => {
-  const currentUser = req.user; 
   try {
-    const followingIds = currentUser.following;
-    const feed = await Book.find({ posted_by: { $in: followingIds } })
-      .populate("posted_by") 
-      .populate("liked_by")   
-      
+      const currentUserId = req.user.userId;
 
-    return res.status(200).json(feed);
+      const currentUser = await User.findById(currentUserId);
+      const followingUserIds = currentUser.following;
+
+      const postsByFollowedUsers = await Book.find({ posted_by: { $in: followingUserIds } });
+
+      const postedByUserIds = postsByFollowedUsers.map(book => book.posted_by);
+      const postedByUsers = await User.find({ _id: { $in: postedByUserIds } }, 'name following');
+
+      const currentUserFollowingMap = {};
+      postedByUsers.forEach(user => {
+          currentUserFollowingMap[user._id] = user.following.includes(currentUserId);
+      });
+
+      const postsWithUserInfo = postsByFollowedUsers.map(book => ({
+          ...book.toObject(),
+          postedByUser: postedByUsers.find(user => user._id.equals(book.posted_by)),
+          currentUserFollowing: currentUserFollowingMap[book.posted_by],
+          currentUserLiked: book.liked_by.includes(currentUserId),
+      }));
+
+      res.status(200).json(postsWithUserInfo);
   } catch (error) {
-    return res.status(500).json({ message: 'An error occurred while fetching the feed.' });
+      console.error(error);
+      res.status(500).json({ message: 'An error occurred while fetching followed users posts.' });
   }
 };
-
-const getRecommendedBooks = async (req, res) => {
-  const currentUser = req.user; 
-
-  try {
-    const followingIds = currentUser.following;
-    const recommendedBooks = await Book.find({ author: { $in: followingIds } }).populate("author");
-    res.status(200).json(recommendedBooks);
-  } catch (error) {
-    res.status(500).json({ message: 'An error occurred while fetching recommended books.' });
-  }
-};
-
 
 module.exports = {
   createBook,
   getAllPosts,
   toggleLikeBook,
   getFeed,
-  getRecommendedBooks,
   searchBooks
 }

@@ -7,16 +7,16 @@ import "./style.css"
 
 function Favourite() {
 
-    const [recipes, setRecipes]= useState([])
+    const [books, setBooks]= useState([])
 
     const fetchData = async () =>{
         try {
             const response = await sendRequest({
-                route: "/user/shopping-lists",
+                route: "/books/feed",
                 method: requestMethods.GET,
             });
-            console.log(response.shoppingList)
-            setRecipes(response.shoppingList);
+            console.log(response)
+            setBooks(response);
         } catch (error) {
             console.error('failed:', error);
         }
@@ -29,7 +29,7 @@ function Favourite() {
     return (
         <div className='home-page-container'>
             <div className='page-title'>Feed :</div>
-            <FavCards recipes={recipes} setRecipes={setRecipes}/>
+            <FavCards books={books} setBooks={setBooks}/>
         </div>
     )
 }

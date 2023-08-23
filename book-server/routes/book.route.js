@@ -9,7 +9,6 @@ router.post("/",authMiddleware,picture_uploader.upload.single("image"), bookCont
 
 router.get("/feed", authMiddleware, bookControllers.getFeed);
 router.post("/:bookId/toggle-like", authMiddleware, bookControllers.toggleLikeBook);
-router.get("/recommended", authMiddleware, bookControllers.getRecommendedBooks);
 router.get("/search/:searchText",authMiddleware, bookControllers.searchBooks);
 
 
