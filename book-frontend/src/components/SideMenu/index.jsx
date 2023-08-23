@@ -22,7 +22,7 @@ function SideMenu() {
 
             <div className="insta-title">
                 <div className="menu-titles">
-                    <i className="fa-solid fa-utensils"></i>
+                    <i class="fa-solid fa-book-open-reader menu-icons"></i>
                 </div>
                 <h4>Foody</h4>
             </div>
@@ -38,19 +38,10 @@ function SideMenu() {
                     </div>
                 </NavLink>
 
-                <NavLink style={navActive} end to="/user/calendar" >
-                    <div className="menu-pages" >
-                        <div className="menu-titles">
-                        <i className="fa-regular fa-calendar menu-icons"></i>
-                        </div>
-                        <h4>Calender</h4>
-                    </div>
-                </NavLink>
-
                 <NavLink style={navActive} end to="/user/favourites" >
                     <div className="menu-pages">
                         <div className="menu-titles">
-                        <i className="fa-regular fa-heart menu-icons"></i>
+                        <i class="fa-solid fa-book menu-icons"></i>
                         </div>
                         <h4>Favoutites</h4>
                     </div>
