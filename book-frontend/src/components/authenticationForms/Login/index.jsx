@@ -27,7 +27,7 @@ function Login({onToggle}) {
     try {
       const response = await sendRequest({
         method: requestMethods.POST,
-        route: "/guest/login",
+        route: "/auth/login",
         body:{
           email,
           password,

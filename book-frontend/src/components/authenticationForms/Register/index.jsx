@@ -28,7 +28,7 @@ function Register({onToggle}) {
         try {
             if (password === confirmPassword) {
                 const response = await sendRequest({
-                    route: "/guest/register",
+                    route: "/auth/register",
                     method: requestMethods.POST,
                     body:{
                         name,
