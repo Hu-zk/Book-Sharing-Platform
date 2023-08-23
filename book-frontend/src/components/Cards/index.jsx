@@ -19,28 +19,28 @@ function Cards({books,setBooks,fetchData}) {
         }
     };
 
-    // const toggleLike = async (recipeId) => {
-    //     try {
-    //         const response = await sendRequest({
-    //             route: `/user/books/${recipeId}/toggle-like`,
-    //             method: requestMethods.POST,
-    //         });
+    const toggleLike = async (recipeId) => {
+        try {
+            const response = await sendRequest({
+                route: `/user/books/${recipeId}/toggle-like`,
+                method: requestMethods.POST,
+            });
             
-    //         setBooks((prevbooks) => {
-    //             return prevbooks.map((recipe) => {
-    //                 if (recipe.id === recipeId) {
-    //                     return {
-    //                         ...recipe,
-    //                         likes: response.like_count > 0 ? [{ user_id: response.user_id }] : [],
-    //                     };
-    //                 }
-    //                 return recipe;
-    //             });
-    //         });
-    //     } catch (error) {
-    //         console.error('Failed to toggle like:', error);
-    //     }
-    // };
+            setBooks((prevbooks) => {
+                return prevbooks.map((recipe) => {
+                    if (recipe.id === recipeId) {
+                        return {
+                            ...recipe,
+                            likes: response.like_count > 0 ? [{ user_id: response.user_id }] : [],
+                        };
+                    }
+                    return recipe;
+                });
+            });
+        } catch (error) {
+            console.error('Failed to toggle like:', error);
+        }
+    };
 
     const toggleShoppingList = async (recipeId) => {
         try {
@@ -75,15 +75,16 @@ function Cards({books,setBooks,fetchData}) {
                         <img className='recipe-img' src={`http://127.0.0.1:8000/${books.image}`} alt="recipe img" />
 
                         <div className='recipe-cuisine'>{books.genre}</div>
+                        <div className='recipe-cuisine'>{books.author}</div>
                         <div className='name-heart'>
                             <div className='recipe-name'>{books.title}</div>
-                            {/* <div className='card-icons'>
-                                <AiOutlinePlusCircle
+                            <div className='card-icons'>
+                                {/* <AiOutlinePlusCircle
                                     size={28}
                                     color={books.shopping_lists.length > 0 ? "blue" : "black"}
                                     onClick={() => toggleShoppingList(books.id)}
-                                />
-                                {books.likes && books.likes.length > 0 ? (
+                                /> */}
+                                {books.currentUserLiked ? (
                                     <AiFillHeart
                                         size={28}
                                         color="red"
@@ -95,8 +96,9 @@ function Cards({books,setBooks,fetchData}) {
                                         onClick={() => toggleLike(books.id)}
                                     />
                                 )}
-                            </div> */}
+                            </div>
                         </div>
+                        <div className='recipe-name'>{books.review}</div>
                     </div>
             ))}
         </div>

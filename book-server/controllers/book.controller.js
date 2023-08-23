@@ -13,20 +13,52 @@ const User = require("../models/user.model");
 //   }
 // }
 
+// const getAllPosts = async (req, res) => {
+//   try {
+//     const currentUserId = req.user._id;
+
+//     const books = await Book.find();
+
+//     const likedByUserIds = books.flatMap(book => book.liked_by);
+
+//     const postedByUserIds = books.map(book => book.posted_by);
+//     const postedByUsers = await User.find({ _id: { $in: postedByUserIds } }, 'name following');
+
+//     const currentUserFollowingMap = {};
+//     postedByUsers.forEach(user => {
+//       currentUserFollowingMap[user._id] = user.following.includes(currentUserId);
+//     });
+
+//     const booksWithUserInfo = books.map(book => ({
+//       ...book.toObject(),
+//       postedByUser: postedByUsers.find(user => user._id.equals(book.posted_by)),
+//       currentUserFollowing: currentUserFollowingMap[book.posted_by],
+//       currentUserLiked: likedByUserIds.includes(currentUserId),
+//     }));
+
+//     res.status(200).json(booksWithUserInfo);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: 'An error occurred while fetching posts.' });
+//   }
+// };
+
 const getAllPosts = async (req, res) => {
   try {
-    const currentUserId = req.user._id;
+    const currentUserId = req.user.userId;
 
     const books = await Book.find();
 
-    const likedByUserIds = books.flatMap(book => book.liked_by);
+    const bookIds = books.map(book => book._id);
+    const likedByUserIds = await User.find({ liked_books: { $in: bookIds } }).distinct('_id');
 
     const postedByUserIds = books.map(book => book.posted_by);
-    const postedByUsers = await User.find({ _id: { $in: postedByUserIds } }, 'name following');
+    const postedByUsers = await User.find({ _id: { $in: postedByUserIds } });
 
     const currentUserFollowingMap = {};
+    const currentUser = await User.findById(currentUserId, 'following');
     postedByUsers.forEach(user => {
-      currentUserFollowingMap[user._id] = user.following.includes(currentUserId);
+      currentUserFollowingMap[user._id] = currentUser.following.includes(user._id.toString());
     });
 
     const booksWithUserInfo = books.map(book => ({
@@ -42,6 +74,7 @@ const getAllPosts = async (req, res) => {
     res.status(500).json({ message: 'An error occurred while fetching posts.' });
   }
 };
+
 
 
 
@@ -62,8 +95,8 @@ const getPost = async (req, res) => {
 const createBook = async (req, res) => {
 
   const { title, author, genre, review, image } = req.body;
-  const userId = req.user._id; 
-    let imagePath = null;
+  const userId = req.user.userId; 
+  let imagePath = null;
 
   if (image) {
     const uploadDir = path.join(__dirname, '../images');
