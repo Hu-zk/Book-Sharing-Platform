@@ -28,7 +28,7 @@ function Favourite() {
 
     return (
         <div className='home-page-container'>
-            <div className='page-title'>Favourites :</div>
+            <div className='page-title'>Feed :</div>
             <FavCards recipes={recipes} setRecipes={setRecipes}/>
         </div>
     )

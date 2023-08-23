@@ -1,13 +1,24 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { AiFillHeart, AiOutlineHeart, AiOutlinePlusCircle } from 'react-icons/ai';
 import { sendRequest } from '../../core/config/request';
 import { requestMethods } from '../../core/enums/requestMethods';
 
 function Cards({books,setBooks}) {
 
+    const [activeReview, setActiveReview] = useState(null);
+
+
     if (!books || books.length === 0) {
         return <p>No books</p>;
     }
+
+    const toggleIngredients = (index) => {
+        if (activeReview === index) {
+            setActiveReview(null);
+        } else {
+            setActiveReview(index);
+        }
+    };
 
     const toggleLike = async (bookId) => {
         try {
@@ -98,7 +109,11 @@ function Cards({books,setBooks}) {
                                 )}
                             </div>
                         </div>
+                        {/* <div className='recipe-ingredient' onClick={() => toggleIngredients(index)}>Review</div>
+                        {activeReview === index && (
                         <div className='recipe-review'>{books.review}</div>
+                        )} */}
+
                         </div>
                     </div>
             ))}

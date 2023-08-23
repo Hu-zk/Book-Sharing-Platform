@@ -105,7 +105,6 @@ const searchBooks = async (req, res) => {
           ],
       });
 
-      // res.status(200).json(foundBooks);
       const postedByUserIds = foundBooks.map(book => book.posted_by);
       const postedByUsers = await User.find({ _id: { $in: postedByUserIds } }, 'name following');
 
