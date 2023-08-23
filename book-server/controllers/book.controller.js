@@ -78,6 +78,7 @@ const createBook = async (req, res) => {
       author,
       image: imagePath,
       review,
+      genre,
       posted_by: userId,
     })
     try {

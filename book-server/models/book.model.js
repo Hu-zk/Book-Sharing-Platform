@@ -8,7 +8,7 @@ const bookSchema = new mongoose.Schema({
   genre: 
   {
     type:String,
-    enum:["Action","Commedy","Fantasy"]
+    enum:["Action","Comedy","Fantasy"]
   },
   author: String,
   image: String,

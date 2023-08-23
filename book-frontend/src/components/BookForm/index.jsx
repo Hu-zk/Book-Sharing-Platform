@@ -18,13 +18,15 @@ function BookForm() {
 
     const handleBookCreation = async (event) => {
         event.preventDefault();
-
-        if (!review || !title || !author || selectedGenre.length === 0 || !image) {
+        console.log(selectedGenre.value)
+        
+        if (!review || !title || !author || !selectedGenre || !image) {
             setError('All fields are required');
             return;
         }
         
         try {
+            console.log("hi")
             const response = await sendRequest({
                 route: "/books/",
                 method: requestMethods.POST,
@@ -33,7 +35,7 @@ function BookForm() {
                     author,
                     review,
                     image,
-                    genre:selectedGenre,
+                    genre:selectedGenre.value,
                 }
             });
             console.log(response)
