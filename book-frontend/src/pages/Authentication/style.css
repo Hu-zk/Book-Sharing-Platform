@@ -104,6 +104,8 @@
   border-radius: 0.5em;
   color: white;
   background-color: rgb(0, 0, 0);
+  background-color: rgb(18, 52, 165);
+
   cursor: pointer;
 }
 

@@ -1,9 +1,72 @@
 .page-title {
   font-size: 2em;
   font-weight: 500;
-  margin-top: 2.5em;
+  margin-top: 3em;
   margin-left: 1em;
   display: flex;
   align-self: flex-start;
   justify-self: flex-start;
+  color: white;
+}
+
+.feed-cards-container {
+  display: flex;
+  justify-content: center;
+  gap: 2em;
+  flex-wrap: wrap;
+  margin: 2em 1em;
+  /* border: 2pt solid rgb(255, 239, 239); */
+  width: 50%;
+}
+
+.feed-card {
+  display: flex;
+  flex-flow: column;
+  background-color: rgb(255, 255, 255);
+  border-radius: 0.5em;
+  width: 80%;
+  height: fit-content;
+  padding: 1em;
+}
+
+.feed-img {
+  border-radius: 0.4em;
+  width: 410px;
+  height: 500px;
+  align-self: center;
+}
+
+.feed-user-follow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 1em;
+  margin-bottom: 1.5em;
+}
+
+.feed-name {
+  font-size: 2em;
+  font-weight: 700;
+}
+
+.feed-cuisine {
+  font-size: 1.3em;
+}
+
+.recipe-ingredient {
+  font-size: 1.5em;
+  font-weight: 600;
+}
+
+.recipe-review {
+  margin-bottom: 1em;
+}
+
+.note {
+  font-size: 2em;
+  font-weight: 700;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
 }

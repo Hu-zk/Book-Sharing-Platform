@@ -1,13 +1,24 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { AiFillHeart, AiOutlineHeart, AiOutlinePlusCircle } from 'react-icons/ai';
 import { sendRequest } from '../../core/config/request';
 import { requestMethods } from '../../core/enums/requestMethods';
 
 function Cards({books,setBooks}) {
 
+    const [ActiveReview, setActiveReview] = useState(null);
+
+
     if (!books || books.length === 0) {
-        return <p>No books</p>;
+        return <p className='note'>No books</p>;
     }
+
+    const toggleIngredients = (index) => {
+        if (ActiveReview === index) {
+            setActiveReview(null);
+        } else {
+            setActiveReview(index);
+        }
+    };
 
     const toggleLike = async (bookId) => {
         try {
@@ -58,47 +69,48 @@ function Cards({books,setBooks}) {
         }
     };
     
-    
-
     return (
-        <div className="cards-container">
+        <div className="feed-cards-container">
             {books.map((books,index)=>(
-                    <div className="card" key={index}>
-                        <div className='user-follow'>
-                            <div className='recipe-name'>{books.postedByUser.name}</div>
+                    <div className="feed-card" key={index}>
+                        <div className='feed-user-follow'>
+                            <div className='feed-name'>{books.postedByUser.name}</div>
                             <div className='card-icons'>
                             <AiOutlinePlusCircle
-                                size={28}
+                                size={32}
                                 color={books.currentUserFollowing ? "blue" : "black"}
                                 onClick={() => toggleFollow(books.postedByUser._id,books._id)}
                             />
                             </div>
                         </div>
-                        <img className='recipe-img' src={`http://127.0.0.1:8000/${books.image}`} alt="recipe img" />
+                        <img className='feed-img' src={`http://127.0.0.1:8000/${books.image}`} alt="recipe img" />
                         <div className='details'>
 
                         <div>
-                        <div className='recipe-cuisine'>{books.genre}</div>
-                        <div className='recipe-cuisine'>{books.author}</div>
+                        <div className='feed-cuisine'><b>Genre :</b> {books.genre}</div>
+                        <div className='feed-cuisine'><b>Author :</b> {books.author}</div>
                         </div>
                         <div className='name-heart'>
-                            <div className='recipe-name'>{books.title}</div>
+                            <div className='feed-name'>{books.title}</div>
                             <div className='card-icons'>
                                 {books.currentUserLiked ? (
                                     <AiFillHeart
-                                        size={28}
+                                        size={36}
                                         color="red"
                                         onClick={() => toggleLike(books._id)}
                                     />
                                 ) : (
                                     <AiOutlineHeart
-                                        size={28}
+                                        size={36}
                                         onClick={() => toggleLike(books._id)}
                                     />
                                 )}
                             </div>
                         </div>
+                        <div className='recipe-ingredient' onClick={() => toggleIngredients(index)}>Review</div>
+                        {ActiveReview === index && (
                         <div className='recipe-review'>{books.review}</div>
+                        )}
 
                         </div>
                     </div>

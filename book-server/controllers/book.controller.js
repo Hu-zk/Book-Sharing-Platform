@@ -130,10 +130,15 @@ const getFeed = async (req, res) => {
   try {
       const currentUserId = req.user.userId;
 
+      // Get the user's following list
       const currentUser = await User.findById(currentUserId);
+      console.log(currentUser)
       const followingUserIds = currentUser.following;
+      console.log(followingUserIds)
 
+      // Get posts by followed users
       const postsByFollowedUsers = await Book.find({ posted_by: { $in: followingUserIds } });
+      // console.log(postsByFollowedUsers)
 
       const postedByUserIds = postsByFollowedUsers.map(book => book.posted_by);
       const postedByUsers = await User.find({ _id: { $in: postedByUserIds } }, 'name following');

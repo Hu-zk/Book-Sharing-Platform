@@ -1,51 +1,15 @@
-import React, { useState } from 'react'
-import { AiFillHeart, AiOutlineHeart, AiOutlinePlusCircle } from 'react-icons/ai';
+import React from 'react'
+import { AiOutlinePlusCircle } from 'react-icons/ai';
 import { sendRequest } from '../../core/config/request';
 import { requestMethods } from '../../core/enums/requestMethods';
 
 function Cards({books,setBooks}) {
 
-    const [activeReview, setActiveReview] = useState(null);
-
-
     if (!books || books.length === 0) {
-        return <p>No books</p>;
+        return <p className='note'>No books</p>;
     }
 
-    const toggleIngredients = (index) => {
-        if (activeReview === index) {
-            setActiveReview(null);
-        } else {
-            setActiveReview(index);
-        }
-    };
-
-    const toggleLike = async (bookId) => {
-        try {
-            const response = await sendRequest({
-                route: `books/${bookId}/toggle-like`,
-                method: requestMethods.POST,
-            });
-            console.log(response)
-            
-            setBooks((prevbooks) => {
-                return prevbooks.map((book) => {
-                    if (book._id === bookId) {
-                        return {
-                            ...book,
-                            currentUserLiked: !book.currentUserLiked, 
-                            liked_by: response.liked_by, 
-                        };
-                    }
-                    return book;
-                });
-            });
-        } catch (error) {
-            console.error('Failed to toggle like:', error);
-        }
-    };
-
-    const toggleFollow = async (userId,bookId) => {
+    const toggleFollow = async (userId) => {
         try {
             const response = await sendRequest({
                 route: `users/${userId}/toggle-follow`,
@@ -69,8 +33,6 @@ function Cards({books,setBooks}) {
         }
     };
     
-    
-
     return (
         <div className="cards-container">
             {books.map((books,index)=>(
@@ -81,7 +43,7 @@ function Cards({books,setBooks}) {
                             <AiOutlinePlusCircle
                                 size={28}
                                 color={books.currentUserFollowing ? "blue" : "black"}
-                                onClick={() => toggleFollow(books.postedByUser._id,books._id)}
+                                onClick={() => toggleFollow(books.postedByUser._id)}
                             />
                             </div>
                         </div>
@@ -89,8 +51,8 @@ function Cards({books,setBooks}) {
 
                         <div className='details'>
                             <div>
-                            <div className='recipe-cuisine'>{books.genre}</div>
-                            <div className='recipe-cuisine'>{books.author}</div>
+                            <div className='recipe-cuisine'><b>Genre :</b>{books.genre}</div>
+                            <div className='recipe-cuisine'><b>Author :</b>{books.author}</div>
                             </div>
 
                             <div className='recipe-name'>{books.title}</div>

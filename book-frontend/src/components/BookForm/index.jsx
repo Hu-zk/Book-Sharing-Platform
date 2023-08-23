@@ -102,7 +102,7 @@ function BookForm() {
                             <label htmlFor="genre">Genre </label>
                             <Select
                                 required
-                                className='select-genre'
+                                className='select-ingredients'
                                 id="genre"
                                 name="genre"
                                 options={genreOptions}
