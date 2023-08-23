@@ -3,53 +3,20 @@ const fs = require('fs');
 const path = require('path'); 
 const User = require("../models/user.model");
 
-// const getAllPosts = async (req, res) => {
-//   try {
-//     const currentUserId = req.user._id;
-
-//     const books = await Book.find();
-
-//     const likedByUserIds = books.flatMap(book => book.liked_by);
-
-//     const postedByUserIds = books.map(book => book.posted_by);
-//     const postedByUsers = await User.find({ _id: { $in: postedByUserIds } }, 'name following');
-
-//     const currentUserFollowingMap = {};
-//     postedByUsers.forEach(user => {
-//       currentUserFollowingMap[user._id] = user.following.includes(currentUserId);
-//     });
-
-//     const booksWithUserInfo = books.map(book => ({
-//       ...book.toObject(),
-//       postedByUser: postedByUsers.find(user => user._id.equals(book.posted_by)),
-//       currentUserFollowing: currentUserFollowingMap[book.posted_by],
-//       currentUserLiked: likedByUserIds.includes(currentUserId),
-//     }));
-
-//     res.status(200).json(booksWithUserInfo);
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ message: 'An error occurred while fetching posts.' });
-//   }
-// };
-
 const getAllPosts = async (req, res) => {
   try {
-    const currentUserId = req.user.userId;
-    console.log(currentUserId)
+    const currentUserId = req.user._id;
 
     const books = await Book.find();
 
-    const bookIds = books.map(book => book._id);
-    const likedByUserIds = await User.find({ liked_books: { $in: bookIds } }).distinct('_id');
+    const likedByUserIds = books.flatMap(book => book.liked_by);
 
     const postedByUserIds = books.map(book => book.posted_by);
-    const postedByUsers = await User.find({ _id: { $in: postedByUserIds } });
+    const postedByUsers = await User.find({ _id: { $in: postedByUserIds } }, 'name following');
 
     const currentUserFollowingMap = {};
-    const currentUser = await User.findById(currentUserId, 'following');
     postedByUsers.forEach(user => {
-      currentUserFollowingMap[user._id] = currentUser.following.includes(user._id.toString());
+      currentUserFollowingMap[user._id] = user.following.includes(currentUserId);
     });
 
     const booksWithUserInfo = books.map(book => ({
@@ -113,6 +80,33 @@ const createBook = async (req, res) => {
     return res.status(400).json({ message: 'File missing in request!.' });
   }
 }
+
+const toggleLikeBook = async (req, res) => {
+  const { bookId } = req.params;
+  const currentUser = req.user;
+
+  try {
+    const book = await Book.findById(bookId);
+    if (!book) {
+      return res.status(404).json({ message: 'Book not found.' });
+    }
+
+    const likedIndex = book.liked_by.indexOf(currentUser._id);
+
+    if (likedIndex === -1) {
+      book.liked_by.push(currentUser._id);
+      await book.save();
+      res.status(200).json({ message: 'Book liked successfully.' });
+    } else {
+      book.liked_by.splice(likedIndex, 1);
+      await book.save();
+      res.status(200).json({ message: 'Book unliked successfully.' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'An error occurred while toggling the book like.' });
+  }
+};
+
 
 const likeBook = async (req, res) => {
   const { bookId } = req.params;
@@ -222,6 +216,7 @@ module.exports = {
   createBook,
   getAllPosts,
   getPost,
+  toggleLikeBook,
   likeBook,
   unlikeBook,
   checkIfBookIsLiked,
