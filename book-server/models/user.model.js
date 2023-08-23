@@ -15,6 +15,6 @@ const userSchema = new mongoose.Schema({
   liked_books: [{ type: mongoose.Schema.Types.ObjectId, ref: 'book' }]
 });
 
-const User = mongoose.model("user", userSchema);
+const User = mongoose.model("User", userSchema);
 
 module.exports = User;
