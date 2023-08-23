@@ -1,13 +1,17 @@
 const Book = require("../models/book.model")
+const fs = require('fs');
+const path = require('path'); 
 
 const getAllPosts = async (req, res) => {
   try {
-    const posts = await Book.find().populate("author");
-    res.send(posts);
+    const books = await Book.find();
+    res.status(200).json(books);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: 'An error occurred while fetching posts.' });
   }
 }
+
 const getPost = async (req, res) => {
   const postId = req.params.id;
 
@@ -23,31 +27,66 @@ const getPost = async (req, res) => {
 }
 
 const createBook = async (req, res) => {
-  const { title, author, review } = req.body;
-  const posted_by = req.user.id;
+
+  const { title, author, genre, review, image } = req.body;
+  const userId = req.user._id; 
   
-  if(req.file){
-      picture =
-      "http://localhost:8000/images/" + req.file.filename;
-  const post = new Book({
-    title,
-    author,
-    picture,
-    review,
-    posted_by
-  })
-  try {
-    const savedBook = await post.save();
-      return res.status(201).json(savedBook);
-  } catch (error) {
-    return res.status(500).json({ message: 'An error occurred while posting the book.' });
+  // console.log(req.body)
+  let imagePath = null;
+
+  if (image) {
+    // Decode base64 image and save to a specific folder
+    const uploadDir = path.join(__dirname, '../images');
+    const extension = 'png'; // Set the appropriate extension based on your use case
+    const imageName = `${Date.now()}.${extension}`;
+    const imageBuffer = Buffer.from(image, 'base64');
+    const imageFilePath = path.join(uploadDir, imageName);
+    fs.writeFileSync(imageFilePath, imageBuffer);
+    imagePath = `../images/${imageName}`;
+  }else{
+    console.log("didn't enter")
   }
 
-  }else{
-    return res.status(400).json({ message: 'File missing in request!.' });
-  }
-  
+
+    const post = new Book({
+      title,
+      author,
+      image: imagePath,
+      review,
+      posted_by: userId,
+    })
+    try {
+      const savedBook = await post.save();
+        return res.status(201).json(savedBook);
+    } catch (error) {
+      return res.status(500).json({ message: 'An error occurred while posting the book.' });
+    }
+
 }
+
+// const createBook = async (req, res) => {
+//   const { title, author, review } = req.body;
+//   const posted_by = req.user.id;
+  
+//   if(req.file){
+//     image ="http://localhost:8000/images/" + req.file.filename;
+//     const post = new Book({
+//       title,
+//       author,
+//       image,
+//       review,
+//       posted_by
+//     })
+//     try {
+//       const savedBook = await post.save();
+//         return res.status(201).json(savedBook);
+//     } catch (error) {
+//       return res.status(500).json({ message: 'An error occurred while posting the book.' });
+//     }
+//   }else{
+//     return res.status(400).json({ message: 'File missing in request!.' });
+//   }
+// }
 
 const addComment = async (req, res) => {
   const { bookId } = req.params;

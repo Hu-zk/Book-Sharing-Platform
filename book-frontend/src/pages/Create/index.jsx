@@ -1,12 +1,12 @@
 import React from 'react'
-import RecipeForm from '../../components/RecipeForm';
+import BookForm from '../../components/BookForm';
 import './style.css';
 
 function Create() {
 
     return (
         <div className='create-page-container'>
-            <RecipeForm/>
+            <BookForm/>
         </div>
     )
 }

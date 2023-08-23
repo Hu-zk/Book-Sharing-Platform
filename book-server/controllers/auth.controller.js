@@ -26,9 +26,10 @@ const login = async (req, res) => {
             id: user._id,
             email: user.email,
             name: user.name,
+            token,
         };
 
-        res.status(200).json({ token, user: userInfo });
+        res.status(200).json({ user: userInfo });
     } catch (error) {
         console.error("Login error:", error);
         res.status(500).json({ message: "Internal server error" });
@@ -64,12 +65,12 @@ const register = async (req, res) => {
         );
 
         res.status(201).json({
-            token,
             user: {
                 id: newUser._id,
                 name: newUser.name,
                 email: newUser.email,
-                password: newUser.password
+                password: newUser.password,
+                token:token,
             }
         });
     } catch (error) {

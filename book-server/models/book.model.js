@@ -11,7 +11,7 @@ const bookSchema = new mongoose.Schema({
     enum:["Action","Commedy","Fantasy"]
   },
   author: String,
-  picture: String,
+  image: String,
   review: String,
 
   liked_by: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
