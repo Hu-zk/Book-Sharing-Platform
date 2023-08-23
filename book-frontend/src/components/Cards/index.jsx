@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { AiFillHeart, AiOutlineHeart, AiOutlinePlusCircle } from 'react-icons/ai';
 import { sendRequest } from '../../core/config/request';
 import { requestMethods } from '../../core/enums/requestMethods';
 
-function Cards({books,setBooks,fetchData}) {
+function Cards({books,setBooks}) {
 
-    if (!books) {
+    if (!books || books.length === 0) {
         return <p>No books</p>;
     }
 
@@ -44,7 +44,7 @@ function Cards({books,setBooks,fetchData}) {
     
             setBooks((prevBooks) => {
                 return prevBooks.map((book) => {
-                    if (book._id === bookId) {
+                    if (book.posted_by === userId) {
                         return {
                             ...book,
                             currentUserFollowing: !book.currentUserFollowing,
@@ -95,7 +95,7 @@ function Cards({books,setBooks,fetchData}) {
                                 )}
                             </div>
                         </div>
-                        <div className='recipe-name'>{books.review}</div>
+                        <div className='recipe-review'>{books.review}</div>
                     </div>
             ))}
         </div>

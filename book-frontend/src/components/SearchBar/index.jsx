@@ -3,37 +3,32 @@ import { sendRequest } from '../../core/config/request';
 import { requestMethods } from '../../core/enums/requestMethods';
 
 
-function SearchBar({ setRecipes }) {
-    const [searchQuery, setSearchQuery] = useState('');
+function SearchBar({ setBooks }) {
+    const [searchText, setSearchText] = useState('');
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-
+    const handleSearch = async () => {
         try {
             const response = await sendRequest({
-                route: `/user/recipes/search/${searchQuery}`,
+                route: `/books/search/${searchText}`,
                 method: requestMethods.GET,
             });
             console.log(response)
-
-            if (response.recipes) {
-                setRecipes(response.recipes);
-            }
+            setBooks(response);
         } catch (error) {
             console.error('Failed to search:', error);
         }
     };
 
     return (
-        <form className="search-bar" onSubmit={handleSubmit}>
+        <div className="search-bar">
             <input
                 type="text"
-                placeholder="Search recipes..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search by genre, author, or keyword"
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
             />
-            <button type="submit">Search</button>
-        </form>
+            <button onClick={handleSearch}>Search</button>
+        </div>
     );
 }
 
