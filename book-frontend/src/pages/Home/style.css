@@ -114,3 +114,9 @@
   /* font-size: 1em; */
   color: white;
 }
+
+.user-follow {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5em;
+}

@@ -5,19 +5,9 @@ import { requestMethods } from '../../core/enums/requestMethods';
 
 function Cards({books,setBooks,fetchData}) {
 
-    const [activeRecipeIndex, setActiveRecipeIndex] = useState(null);
-
     if (!books) {
         return <p>No books</p>;
     }
-
-    const toggleIngredients = (index) => {
-        if (activeRecipeIndex === index) {
-            setActiveRecipeIndex(null);
-        } else {
-            setActiveRecipeIndex(index);
-        }
-    };
 
     const toggleLike = async (bookId) => {
         try {
@@ -74,6 +64,14 @@ function Cards({books,setBooks,fetchData}) {
         <div className="cards-container">
             {books.map((books,index)=>(
                     <div className="card" key={index}>
+                        <div className='user-follow'>
+                            <div className='recipe-name'>{books.postedByUser.name}</div>
+                            <AiOutlinePlusCircle
+                                size={28}
+                                color={books.currentUserFollowing ? "blue" : "black"}
+                                onClick={() => toggleShoppingList(books.id)}
+                            />
+                        </div>
                         <img className='recipe-img' src={`http://127.0.0.1:8000/${books.image}`} alt="recipe img" />
 
                         <div className='recipe-cuisine'>{books.genre}</div>
@@ -81,11 +79,6 @@ function Cards({books,setBooks,fetchData}) {
                         <div className='name-heart'>
                             <div className='recipe-name'>{books.title}</div>
                             <div className='card-icons'>
-                                {/* <AiOutlinePlusCircle
-                                    size={28}
-                                    color={books.shopping_lists.length > 0 ? "blue" : "black"}
-                                    onClick={() => toggleShoppingList(books.id)}
-                                /> */}
                                 {books.currentUserLiked ? (
                                     <AiFillHeart
                                         size={28}
