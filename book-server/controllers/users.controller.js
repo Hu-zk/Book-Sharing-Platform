@@ -7,7 +7,6 @@ const toggleFollow = async (req, res) => {
     try {
         const userToFollow = await User.findById(userId);
         const userToFollowId = userToFollow._id
-        console.log(userToFollowId)
         const currentUser = await User.findById(currentUserId);
     
         if (!userToFollow) {

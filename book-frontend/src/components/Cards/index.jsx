@@ -3,7 +3,7 @@ import { AiOutlinePlusCircle } from 'react-icons/ai';
 import { sendRequest } from '../../core/config/request';
 import { requestMethods } from '../../core/enums/requestMethods';
 
-function Cards({books,setBooks}) {
+function Cards({books,setBooks,fetchData}) {
 
     if (!books || books.length === 0) {
         return <p className='note'>No books</p>;

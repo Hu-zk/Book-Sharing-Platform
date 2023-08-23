@@ -45,7 +45,7 @@ function Cards({books,setBooks}) {
         }
     };
 
-    const toggleFollow = async (userId,bookId) => {
+    const toggleFollow = async (userId) => {
         try {
             const response = await sendRequest({
                 route: `users/${userId}/toggle-follow`,

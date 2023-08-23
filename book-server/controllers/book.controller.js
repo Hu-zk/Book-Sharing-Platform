@@ -8,22 +8,32 @@ const getAllPosts = async (req, res) => {
     const currentUserId = req.user.userId;
 
     const books = await Book.find();
-
     const postedByUserIds = books.map(book => book.posted_by);
-    const postedByUsers = await User.find({ _id: { $in: postedByUserIds } }, 'name following');
+    
+    const postedByUsers = await User.find(
+      { _id: { $in: postedByUserIds } },
+      'name following'
+    );
 
     const currentUserFollowingMap = {};
-    postedByUsers.forEach(user => {
-      currentUserFollowingMap[user._id] = user.following.includes(currentUserId);
+    const currentUser = await User.findById(currentUserId);
+    currentUser.following.forEach(followedUserId => {
+      currentUserFollowingMap[followedUserId] = true;
     });
 
-    const booksWithUserInfo = books.map(book => ({
-      ...book.toObject(),
-      postedByUser: postedByUsers.find(user => user._id.equals(book.posted_by)),
-      currentUserFollowing: currentUserFollowingMap[book.posted_by],
-      currentUserLiked: book.liked_by.includes(currentUserId),
+    const booksWithUserInfo = books.map(book => {
+      const postedByUser = postedByUsers.find(user =>
+        user._id.equals(book.posted_by)
+      );
+      const currentUserFollowing = currentUserFollowingMap[postedByUser._id];
 
-    }));
+      return {
+        ...book.toObject(),
+        postedByUser,
+        currentUserFollowing,
+        currentUserLiked: book.liked_by.includes(currentUserId),
+      };
+    });
 
     res.status(200).json(booksWithUserInfo);
   } catch (error) {
@@ -31,6 +41,7 @@ const getAllPosts = async (req, res) => {
     res.status(500).json({ message: 'An error occurred while fetching posts.' });
   }
 };
+
 
 const createBook = async (req, res) => {
 
@@ -91,76 +102,120 @@ const toggleLikeBook = async (req, res) => {
   }
 };
 
+// const searchBooks = async (req, res) => {
+//   const searchText = req.params.searchText;
+//   const currentUserId = req.user.userId;
+  
+//   try {
+//       const foundBooks = await Book.find({
+//           $or: [
+//               { title: { $regex: searchText, $options: 'i' } },
+//               { author: { $regex: searchText, $options: 'i' } },
+//               { genre: { $regex: searchText, $options: 'i' } },
+//               { review: { $regex: searchText, $options: 'i' } },
+//           ],
+//       });
+
+//       const postedByUserIds = foundBooks.map(book => book.posted_by);
+//       const postedByUsers = await User.find({ _id: { $in: postedByUserIds } }, 'name following');
+
+//       const currentUserFollowingMap = {};
+//       postedByUsers.forEach(user => {
+//           currentUserFollowingMap[user._id] = user.following.includes(currentUserId);
+//       });
+
+//       const booksWithUserInfo = foundBooks.map(book => ({
+//           ...book.toObject(),
+//           postedByUser: postedByUsers.find(user => user._id.equals(book.posted_by)),
+//           currentUserFollowing: currentUserFollowingMap[book.posted_by],
+//           currentUserLiked: book.liked_by.includes(currentUserId),
+//       }));
+
+//       res.status(200).json(booksWithUserInfo);
+//   } catch (error) {
+//       res.status(500).json({ message: 'An error occurred while searching for books.' });
+//   }
+// };
+
 const searchBooks = async (req, res) => {
   const searchText = req.params.searchText;
   const currentUserId = req.user.userId;
   
   try {
-      const foundBooks = await Book.find({
-          $or: [
-              { title: { $regex: searchText, $options: 'i' } },
-              { author: { $regex: searchText, $options: 'i' } },
-              { genre: { $regex: searchText, $options: 'i' } },
-              { review: { $regex: searchText, $options: 'i' } },
-          ],
-      });
+    const foundBooks = await Book.find({
+      $or: [
+        { title: { $regex: searchText, $options: 'i' } },
+        { author: { $regex: searchText, $options: 'i' } },
+        { genre: { $regex: searchText, $options: 'i' } },
+        { review: { $regex: searchText, $options: 'i' } },
+      ],
+    });
 
-      const postedByUserIds = foundBooks.map(book => book.posted_by);
-      const postedByUsers = await User.find({ _id: { $in: postedByUserIds } }, 'name following');
+    const postedByUserIds = foundBooks.map(book => book.posted_by);
+    const postedByUsers = await User.find({ _id: { $in: postedByUserIds } }, 'name following');
 
-      const currentUserFollowingMap = {};
-      postedByUsers.forEach(user => {
-          currentUserFollowingMap[user._id] = user.following.includes(currentUserId);
-      });
+    const currentUserFollowingMap = {};
+    const currentUser = await User.findById(currentUserId);
+    currentUser.following.forEach(followedUserId => {
+      currentUserFollowingMap[followedUserId] = true;
+    });
 
-      const booksWithUserInfo = foundBooks.map(book => ({
-          ...book.toObject(),
-          postedByUser: postedByUsers.find(user => user._id.equals(book.posted_by)),
-          currentUserFollowing: currentUserFollowingMap[book.posted_by],
-          currentUserLiked: book.liked_by.includes(currentUserId),
-      }));
+    const booksWithUserInfo = foundBooks.map(book => {
+      const postedByUser = postedByUsers.find(user =>
+        user._id.equals(book.posted_by)
+      );
+      const currentUserFollowing = currentUserFollowingMap[postedByUser._id];
 
-      res.status(200).json(booksWithUserInfo);
+      return {
+        ...book.toObject(),
+        postedByUser,
+        currentUserFollowing,
+        currentUserLiked: book.liked_by.includes(currentUserId),
+      };
+    });
+
+    res.status(200).json(booksWithUserInfo);
   } catch (error) {
-      res.status(500).json({ message: 'An error occurred while searching for books.' });
+    res.status(500).json({ message: 'An error occurred while searching for books.' });
   }
 };
 
 const getFeed = async (req, res) => {
   try {
-      const currentUserId = req.user.userId;
+    const currentUserId = req.user.userId;
 
-      // Get the user's following list
-      const currentUser = await User.findById(currentUserId);
-      console.log(currentUser)
-      const followingUserIds = currentUser.following;
-      console.log(followingUserIds)
+    const currentUser = await User.findById(currentUserId);
+    const followingUserIds = currentUser.following;
 
-      // Get posts by followed users
-      const postsByFollowedUsers = await Book.find({ posted_by: { $in: followingUserIds } });
-      // console.log(postsByFollowedUsers)
+    const postsByFollowedUsers = await Book.find({ posted_by: { $in: followingUserIds } });
 
-      const postedByUserIds = postsByFollowedUsers.map(book => book.posted_by);
-      const postedByUsers = await User.find({ _id: { $in: postedByUserIds } }, 'name following');
+    const postedByUserIds = postsByFollowedUsers.map(book => book.posted_by);
+    const postedByUsers = await User.find({ _id: { $in: postedByUserIds } }, 'name following');
 
-      const currentUserFollowingMap = {};
-      postedByUsers.forEach(user => {
-          currentUserFollowingMap[user._id] = user.following.includes(currentUserId);
-      });
+    const currentUserFollowingMap = {};
+    currentUser.following.forEach(followedUserId => {
+      currentUserFollowingMap[followedUserId] = true;
+    });
 
-      const postsWithUserInfo = postsByFollowedUsers.map(book => ({
-          ...book.toObject(),
-          postedByUser: postedByUsers.find(user => user._id.equals(book.posted_by)),
-          currentUserFollowing: currentUserFollowingMap[book.posted_by],
-          currentUserLiked: book.liked_by.includes(currentUserId),
-      }));
+    const booksWithUserInfo = postsByFollowedUsers.map(book => {
+      const postedByUser = postedByUsers.find(user => user._id.equals(book.posted_by));
+      const currentUserFollowing = currentUserFollowingMap[postedByUser._id];
 
-      res.status(200).json(postsWithUserInfo);
+      return {
+        ...book.toObject(),
+        postedByUser,
+        currentUserFollowing,
+        currentUserLiked: book.liked_by.includes(currentUserId),
+      };
+    });
+
+    res.status(200).json(booksWithUserInfo);
   } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'An error occurred while fetching followed users posts.' });
+    console.error(error);
+    res.status(500).json({ message: 'An error occurred while fetching followed users posts.' });
   }
 };
+
 
 module.exports = {
   createBook,
