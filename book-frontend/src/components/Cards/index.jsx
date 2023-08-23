@@ -75,9 +75,12 @@ function Cards({books,setBooks}) {
                             </div>
                         </div>
                         <img className='recipe-img' src={`http://127.0.0.1:8000/${books.image}`} alt="recipe img" />
+                        <div className='details'>
 
+                        <div>
                         <div className='recipe-cuisine'>{books.genre}</div>
                         <div className='recipe-cuisine'>{books.author}</div>
+                        </div>
                         <div className='name-heart'>
                             <div className='recipe-name'>{books.title}</div>
                             <div className='card-icons'>
@@ -96,6 +99,7 @@ function Cards({books,setBooks}) {
                             </div>
                         </div>
                         <div className='recipe-review'>{books.review}</div>
+                        </div>
                     </div>
             ))}
         </div>

@@ -24,7 +24,7 @@ function SideMenu() {
                 <div className="menu-titles">
                     <i className="fa-solid fa-book-open-reader menu-icons"></i>
                 </div>
-                <h4>Foody</h4>
+                <h4>Booky</h4>
             </div>
 
             <div className="menu-section">
@@ -43,7 +43,7 @@ function SideMenu() {
                         <div className="menu-titles">
                         <i className="fa-solid fa-book menu-icons"></i>
                         </div>
-                        <h4>Favoutites</h4>
+                        <h4>Feed</h4>
                     </div>
                 </NavLink>
 
