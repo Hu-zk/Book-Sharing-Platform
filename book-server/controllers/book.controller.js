@@ -5,11 +5,9 @@ const User = require("../models/user.model");
 
 const getAllPosts = async (req, res) => {
   try {
-    const currentUserId = req.user._id;
+    const currentUserId = req.user.userId;
 
     const books = await Book.find();
-
-    const likedByUserIds = books.flatMap(book => book.liked_by);
 
     const postedByUserIds = books.map(book => book.posted_by);
     const postedByUsers = await User.find({ _id: { $in: postedByUserIds } }, 'name following');
@@ -23,7 +21,8 @@ const getAllPosts = async (req, res) => {
       ...book.toObject(),
       postedByUser: postedByUsers.find(user => user._id.equals(book.posted_by)),
       currentUserFollowing: currentUserFollowingMap[book.posted_by],
-      currentUserLiked: likedByUserIds.includes(currentUserId),
+      currentUserLiked: book.liked_by.includes(currentUserId),
+
     }));
 
     res.status(200).json(booksWithUserInfo);
@@ -83,7 +82,7 @@ const createBook = async (req, res) => {
 
 const toggleLikeBook = async (req, res) => {
   const { bookId } = req.params;
-  const currentUser = req.user;
+  const currentUserId = req.user.userId;
 
   try {
     const book = await Book.findById(bookId);
@@ -91,10 +90,10 @@ const toggleLikeBook = async (req, res) => {
       return res.status(404).json({ message: 'Book not found.' });
     }
 
-    const likedIndex = book.liked_by.indexOf(currentUser._id);
+    const likedIndex = book.liked_by.indexOf(currentUserId);
 
     if (likedIndex === -1) {
-      book.liked_by.push(currentUser._id);
+      book.liked_by.push(currentUserId);
       await book.save();
       res.status(200).json({ message: 'Book liked successfully.' });
     } else {

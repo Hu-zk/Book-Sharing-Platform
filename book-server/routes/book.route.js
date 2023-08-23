@@ -8,7 +8,7 @@ router.get("/",authMiddleware, bookControllers.getAllPosts)
 router.post("/",authMiddleware,picture_uploader.upload.single("image"), bookControllers.createBook)
 
 router.get("/feed", authMiddleware, bookControllers.getFeed);
-router.post("/:bookId/togglelike", authMiddleware, bookControllers.toggleLikeBook);
+router.post("/:bookId/toggle-like", authMiddleware, bookControllers.toggleLikeBook);
 router.post("/:bookId/like", authMiddleware, bookControllers.likeBook);
 router.post("/:bookId/unlike", authMiddleware, bookControllers.unlikeBook);
 router.get('/:bookId/isliked', authMiddleware, bookControllers.checkIfBookIsLiked);

@@ -19,22 +19,24 @@ function Cards({books,setBooks,fetchData}) {
         }
     };
 
-    const toggleLike = async (recipeId) => {
+    const toggleLike = async (bookId) => {
         try {
             const response = await sendRequest({
-                route: `/user/books/${recipeId}/toggle-like`,
+                route: `books/${bookId}/toggle-like`,
                 method: requestMethods.POST,
             });
+            console.log(response)
             
             setBooks((prevbooks) => {
-                return prevbooks.map((recipe) => {
-                    if (recipe.id === recipeId) {
+                return prevbooks.map((book) => {
+                    if (book._id === bookId) {
                         return {
-                            ...recipe,
-                            likes: response.like_count > 0 ? [{ user_id: response.user_id }] : [],
+                            ...book,
+                            currentUserLiked: !book.currentUserLiked, 
+                            liked_by: response.liked_by, 
                         };
                     }
-                    return recipe;
+                    return book;
                 });
             });
         } catch (error) {
@@ -88,12 +90,12 @@ function Cards({books,setBooks,fetchData}) {
                                     <AiFillHeart
                                         size={28}
                                         color="red"
-                                        onClick={() => toggleLike(books.id)}
+                                        onClick={() => toggleLike(books._id)}
                                     />
                                 ) : (
                                     <AiOutlineHeart
                                         size={28}
-                                        onClick={() => toggleLike(books.id)}
+                                        onClick={() => toggleLike(books._id)}
                                     />
                                 )}
                             </div>
