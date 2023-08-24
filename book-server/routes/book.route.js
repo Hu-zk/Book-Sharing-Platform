@@ -2,10 +2,9 @@ const express = require("express");
 const authMiddleware = require("../middlewares/auth.middleware")
 const router = express.Router()
 const bookControllers = require("../controllers/book.controller");
-const picture_uploader =require("../middlewares/picture_uploader")
 
 router.get("/",authMiddleware, bookControllers.getAllPosts)
-router.post("/",authMiddleware,picture_uploader.upload.single("image"), bookControllers.createBook)
+router.post("/",authMiddleware, bookControllers.createBook)
 
 router.get("/feed", authMiddleware, bookControllers.getFeed);
 router.post("/:bookId/toggle-like", authMiddleware, bookControllers.toggleLikeBook);
