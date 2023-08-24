@@ -31,8 +31,8 @@
 
 .feed-img {
   border-radius: 0.4em;
-  width: 410px;
-  height: 500px;
+  width: 85%;
+  /* height: 75%; */
   align-self: center;
 }
 
