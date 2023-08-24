@@ -8,7 +8,12 @@ function Cards({books,setBooks,fetchData}) {
     if (!books || books.length === 0) {
         return <p className='note'>No books</p>;
     }
+    
+    const userData = JSON.parse(localStorage.getItem('userData'));
+    const currentUserId =userData.id;
 
+    
+    
     const toggleFollow = async (userId) => {
         try {
             const response = await sendRequest({
@@ -39,13 +44,15 @@ function Cards({books,setBooks,fetchData}) {
                     <div className="card" key={index}>
                         <div className='user-follow'>
                             <div className='recipe-name'>{books.postedByUser.name}</div>
+                            { books.postedByUser._id !== currentUserId && (
                             <div className='card-icons'>
-                            <AiOutlinePlusCircle
+                                <AiOutlinePlusCircle
                                 size={28}
-                                color={books.currentUserFollowing ? "blue" : "black"}
+                                color={books.currentUserFollowing ? 'blue' : 'black'}
                                 onClick={() => toggleFollow(books.postedByUser._id)}
-                            />
+                                />
                             </div>
+                            )}
                         </div>
                         <img className='recipe-img' src={`http://127.0.0.1:8000/${books.image}`} alt="recipe img" />
 
